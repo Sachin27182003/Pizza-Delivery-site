@@ -4,7 +4,7 @@
   "description": "Common Coding for all fresh start",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon source(src)/index.js"
+    "start": "npx nodemon source_src/index.js"
   },
   "repository": {
     "type": "git",
