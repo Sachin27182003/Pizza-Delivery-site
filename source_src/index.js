@@ -41,14 +41,14 @@ app.use('/orders', orderRouter);
 
 
 
-app.get('/ping', isLoggedIn ,(req, res)=>{
+app.get('/ping',(req, res)=>{
     console.log(req.body);
     console.log(req.cookies);
     return res.json({message: "pong"});
 })
 
 
-app.listen(serverConfig.PORT, async () => {
+app.listen(serverConfig.PORT || 400, async () => {
     await connectDB();
     console.log(`server started on port ${serverConfig.PORT}...!`);
     
