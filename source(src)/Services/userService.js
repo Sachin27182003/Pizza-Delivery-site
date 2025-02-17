@@ -27,7 +27,8 @@ async function registerUser(userDetails){
         lastName: userDetails.lastName,
         mobileNumber: userDetails.mobileNumber,
         email: userDetails.email,
-        password: userDetails.password
+        password: userDetails.password,
+        address: userDetails.address
     })
 
     if(!newUser){
