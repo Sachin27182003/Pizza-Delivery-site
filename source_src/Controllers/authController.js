@@ -8,7 +8,7 @@ async function login(req, res){
 
         const response = await validateLogin(loginPayload);
 
-        res.cookie("authToken", response, {
+        res.cookie("authToken", response.token, {
             httpOnly : true,
             secure: true,
             maxAge: 7 * 24 * 60 * 60 * 1000
@@ -17,7 +17,10 @@ async function login(req, res){
         return res.status(200).json({
             success: true,
             message: "logged in successfully",
-            data: {},
+            data: {
+                userRole: response.userRole,
+                userData: response.userData
+            },
             error: {}
         })
     } catch (error) {

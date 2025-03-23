@@ -6,7 +6,6 @@ const {findUser, createUser} = require('../Repositories/userRepositories')
     
 async function registerUser(userDetails){
     // it will create a brand new user in database;
-    
     //we need to check if the user with this email and mobile number already exists or not
     const user = await findUser({
         $or: [
@@ -17,7 +16,7 @@ async function registerUser(userDetails){
     
     //if user not found 
     if(user){
-        throw { message: "User already exist ", statusCode: 400}
+        throw { message: "User already exist", statusCode: 409}
     }
 
     // if not then create a new user in the database;
@@ -30,6 +29,7 @@ async function registerUser(userDetails){
         password: userDetails.password,
         address: userDetails.address
     })
+
 
     if(!newUser){
         throw { message : "Something went wrong, Unable to create user", statusCode: 500}

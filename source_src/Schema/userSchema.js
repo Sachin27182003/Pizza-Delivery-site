@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     firstName:{
        type: String,
        required: [true, "First name is required"],
-       minlength: [5, "First name shouldn'be less than 5 character"],
+       minlength: [2, "First name shouldn'be less than 5 character"],
        lowercase: true,
        trim: true,
        maxlength: [20, "First name shouldn't be exceed by 20 character"]
@@ -13,10 +13,10 @@ const userSchema = new mongoose.Schema({
 
     lastName:{
         type: String,
-        minlength: [5, "First name shouldn'be less than 5 character"],
+        minlength: [2, "Last name shouldn'be less than 5 character"],
         lowercase: true,
         trim: true,
-        maxlength: [20, "First name shouldn't be exceed by 20 character"]
+        maxlength: [20, "Last name shouldn't be exceed by 20 character"]
      },
 
     mobileNumber:{
@@ -44,13 +44,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['ADMIN', 'USER'],
         default: 'USER'
-    },
-    address:{
-        type: String,
-        required: true,
-        trim: true,
-        minlength: [10, "Please Enter complete address"]
-    } 
+    }
 },{timestamps: true, versionKey: false})
 
 userSchema.pre('save', async function (){

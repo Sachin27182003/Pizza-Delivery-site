@@ -6,11 +6,15 @@ const { JWT_SECRET, JWT_EXPIRY } = require('../config/serverConfig');
 async function validateLogin(authDetails){
 
     const email =authDetails.email;
+    const mobileNumber = authDetails.mobileNumber;
     const plainPassword = authDetails.password;
 
      // Check if the user exist or not
-     const user = await authFindUser({email});
 
+      const user = await authFindUser({
+            $or: [{ email }, { mobileNumber }]
+      }); 
+    
      if(!user){
         throw {message: "No user Found Please Register first", statusCode: 404}
      }
@@ -19,7 +23,7 @@ async function validateLogin(authDetails){
      const isPasswordValidated = await bcrypt.compare(plainPassword, user.password);
 
      if(!isPasswordValidated){
-        throw { message: "Invalid Password, Please Try again!!", statusCode: 401}
+        throw { message: "Incorrect Password, Please Try again!!", statusCode: 401}
      }
 
      const userRole = user.role ? user.role : "USER"
@@ -27,7 +31,10 @@ async function validateLogin(authDetails){
      // If the password is validated create a token and return it
      const token = jwt.sign({email: user.email, id: user._id, role: userRole}, JWT_SECRET, {expiresIn: JWT_EXPIRY});
 
-     return token;
+     return {token, userRole, userData:{
+      email: user.email,
+      firstName: user.firstName
+     }};
 } 
 
 

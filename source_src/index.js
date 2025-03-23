@@ -11,12 +11,19 @@ const serverConfig = require('./config/serverConfig');
 const connectDB = require('./config/dbConfig');
 // const userRouter = require('./Routes/userRoute');
 const { cartRouter, userRouter, authRouter, productRouter, getProductRouter, deleteProductRouter, orderRouter } = require('./Routes/Router');
-const {isLoggedIn} = require('./Validation/authValidator');
-
+const cors = require('cors');
 // const user = require('./Schema/userSchema');
 
 
 const app = express();
+// app.use(cors());
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    // methods: "GET,POST,PUT,DELETE", 
+    credentials: true,
+}));
+
 app.use(cookieParser());
 
 app.use(bodyParser.json());
@@ -33,12 +40,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 //Routing middleware
 app.use('/users', userRouter);
 app.use('/carts', cartRouter);
-app.use('/', authRouter);
+app.use('/auth', authRouter);
 app.use('/add', productRouter);
 app.use('/product', getProductRouter);
 app.use('/product', deleteProductRouter);
 app.use('/orders', orderRouter);
-
 
 
 app.get('/ping',(req, res)=>{
@@ -48,7 +54,7 @@ app.get('/ping',(req, res)=>{
 })
 
 
-app.listen(serverConfig.PORT || 400, async () => {
+app.listen(serverConfig.PORT || 4000, async () => {
     await connectDB();
     console.log(`server started on port ${serverConfig.PORT}...!`);
     
