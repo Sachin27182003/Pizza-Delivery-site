@@ -34,6 +34,7 @@ async function getCartById(req, res){
 
 async function modifyProductToCart(req, res){
 
+    console.log("user.id", req.user.id,"operations", req.params.operation, "productId",  req.params.productId)
     
     try {
     

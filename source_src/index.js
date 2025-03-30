@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser');
 const serverConfig = require('./config/serverConfig');
 const connectDB = require('./config/dbConfig');
 // const userRouter = require('./Routes/userRoute');
-const { cartRouter, userRouter, authRouter, productRouter, getProductRouter, deleteProductRouter, orderRouter } = require('./Routes/Router');
+const { cartRouter, userRouter, authRouter, productRouter, getProductRouter, deleteProductRouter, orderRouter, getProductsRouter } = require('./Routes/Router');
 const cors = require('cors');
 // const user = require('./Schema/userSchema');
 
@@ -43,9 +43,9 @@ app.use('/carts', cartRouter);
 app.use('/auth', authRouter);
 app.use('/add', productRouter);
 app.use('/product', getProductRouter);
+app.use('/products', getProductsRouter);
 app.use('/product', deleteProductRouter);
 app.use('/orders', orderRouter);
-
 
 app.get('/ping',(req, res)=>{
     console.log(req.body);

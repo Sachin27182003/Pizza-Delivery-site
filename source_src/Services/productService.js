@@ -1,4 +1,4 @@
-const {addProduct, getProductById, deleteProductById} = require('../Repositories/productRepositories')
+const {addProduct, getProductById, deleteProductById, getAllProducts} = require('../Repositories/productRepositories')
 const mongoose = require('mongoose');
 const NotFoundError = require('../utils/notFoundError');
 const { ObjectId } = mongoose.Types;
@@ -30,21 +30,32 @@ async function registerProduct(userDetails, imageDetails){
 
 async function findProductById(productID){
 
-    console.log("From product service");
 
-    if (!ObjectId.isValid(productID)) {
+    if (!ObjectId.isValid(productID)) {  //checks whether given paramerter is valid ObjectId or not
         return res.status(400).send({ error: 'Invalid product ID' });
     }
 
-
-    console.log("after validation");
     const response = await getProductById(productID);
     
    if(!response){
-    throw {message: "Product not found", statusCode: 404};
-   } else {
-    return response;
-   }
+    throw new NotFoundError("Product");
+   } 
+
+   return response;
+   
+}
+
+async function allProducts(count){
+
+
+    const response = await getAllProducts(count);
+
+   if(!response){
+    throw new NotFoundError("Products");
+   } 
+
+   return response;
+   
 }
 
 async function findAndDeleteProductByID(productID){
@@ -69,5 +80,6 @@ async function findAndDeleteProductByID(productID){
 module.exports = {
     registerProduct,
     findProductById,
+    allProducts,
     findAndDeleteProductByID
 }

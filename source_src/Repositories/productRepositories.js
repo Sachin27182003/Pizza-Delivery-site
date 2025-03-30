@@ -1,4 +1,5 @@
-const { product } = require('../Schema/productSchema')
+const { product } = require('../Schema/productSchema');
+const NotFoundError = require('../utils/notFoundError');
 const cloudinary = require('cloudinary').v2;
 
 async function addProduct(productDetails){
@@ -21,6 +22,23 @@ async function getProductById(productId){
     }
 }
 
+async function getAllProducts(count) {
+
+    try {
+        const products = await product.find({}).skip(count.toSkip).limit(count.limit);
+
+        if (!products.length) {
+            throw new NotFoundError("No products found");
+        }
+
+        return products;
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        throw new NotFoundError("Products not found");
+    }
+}
+
+
 async function deleteProductById(productId, publicId){
 
 await cloudinary.api
@@ -39,6 +57,7 @@ await cloudinary.api
 
 module.exports = {
     addProduct,
+    getAllProducts,
     getProductById,
     deleteProductById
 }

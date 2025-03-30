@@ -3,11 +3,9 @@ const AppError = require('../utils/appError');
 
 
 async function createUser(req, res){
-    console.log(req.body);
 
     try {
         const response = await registerUser(req.body);
-        console.log(response);
         return res.status(201).json({
             message: "User Registered successfully",
             success: true,

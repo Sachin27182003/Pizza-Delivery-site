@@ -21,11 +21,8 @@ async function getcart(userId){
 
 async function modifyCart(userId, shouldAdd = true, productId){
 
-    console.log("Cart service2");
     let cart = await getcart(userId);
-    console.log("Cart service3");
     const product = await getProductById(productId);
-    console.log("Cart service4");
 
     if(!product){
         throw new NotFoundError();

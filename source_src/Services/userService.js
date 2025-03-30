@@ -27,7 +27,7 @@ async function registerUser(userDetails){
         mobileNumber: userDetails.mobileNumber,
         email: userDetails.email,
         password: userDetails.password,
-        address: userDetails.address
+        role: userDetails.role
     })
 
 
@@ -35,7 +35,6 @@ async function registerUser(userDetails){
         throw { message : "Something went wrong, Unable to create user", statusCode: 500}
     }
 
-    console.log(newUser._id);
     // will create a cart 
     await createCart(newUser._id);
 
