@@ -19,8 +19,8 @@ const app = express();
 // app.use(cors());
 
 app.use(cors({
-    origin: "https://deliverpizzasite.netlify.app/",
-    // methods: "GET,POST,PUT,DELETE", 
+    origin: "https://deliverpizzasite.netlify.app",
+    methods: "GET,POST,PUT,DELETE", 
     credentials: true,
 }));
 
