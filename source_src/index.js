@@ -19,7 +19,7 @@ const app = express();
 // app.use(cors());
 
 app.use(cors({
-    origin: "https://deliverpizzasite.netlify.app", // NO trailing slash
+    origin: "https://deliverpizzasite.netlify.app/", // NO trailing slash
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Allow cookies if needed
 }));

@@ -12,7 +12,7 @@ async function login(req, res){
             httpOnly : true,
             secure: true,
             sameSite: "none", 
-             path: "/",
+            path: "/",
             // domain: "http://localhost:5173/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
