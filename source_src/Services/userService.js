@@ -42,7 +42,7 @@ async function registerUser(userDetails){
     return newUser;
 
 
-    }
+}
 
 module.exports = {
     registerUser

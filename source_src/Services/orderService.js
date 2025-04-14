@@ -1,53 +1,58 @@
 const { getcartByUserId } = require("../Repositories/cartRepositories");
 const { createNewOrder, fetchOrders, fetchOrderById, updateOrderById } = require("../Repositories/orderRepositories");
 const { findUser } = require("../Repositories/userRepositories");
-const { BadRequestError } = require("../utils/BadRequestError");
-const { InternalServerError } = require("../utils/internalServerError");
 const NotFoundError = require("../utils/notFoundError");
 const { clearWholeCart } = require("./cartService");
 
 
-async function createOrder(userId, paymentMethod){
-
+async function createOrder(userId, paymentMethod, address) {
     const cart = await getcartByUserId(userId);
-    const user = await findUser({_id: cart.user})
+    const user = await findUser({ _id: cart.user });
 
-    if(!cart){
-        throw new NotFoundError("Cart not found");
+    if (!cart) {
+        const error = new Error("Cart not found");
+        error.statusCode = 404;
+        throw error;
     }
 
-    if(cart.items.length === 0){
-       return false;
+    if (cart.items.length === 0) {
+        return false;
     }
 
-    const orderObject = {}
+    const orderObject = {
+        user: cart.user,
+        items: cart.items.map(cartitem => ({
+            product: cartitem.product._id,
+            quantity: cartitem.quantity
+        })),
+        status: "ORDERED",
+        totalPrice: 0,
+        address,
+        PaymentMethod: paymentMethod,
+    };
 
-    orderObject.user = cart.user;
-    orderObject.items = cart.items.map(cartitem => {
-        return {product: cartitem.product._id, quantity: cartitem.quantity}
-    })
-    
-    orderObject.status = "ORDERED";
-    orderObject.totalPrice = 0;
+    cart.items.forEach((item) => {
+        orderObject.totalPrice += item.product.price * item.quantity;
+    });
 
-    cart.items.forEach((items)=> {
-        orderObject.totalPrice += items.product.price * items.quantity;
-    })
+    try {
+        const order = await createNewOrder(orderObject);
 
-    orderObject.address = user.address;
+        if (!order) {
+            const error = new Error("Failed to create order.");
+            error.statusCode = 500;
+            throw error;
+        }
 
-    orderObject.PaymentMethod = paymentMethod;
+        await clearWholeCart(userId);
+        return order;
 
-    const order = await createNewOrder(orderObject);
-
-    if(!order){
-        throw new InternalServerError();
+    } catch (error) {
+        throw error; // propagate the actual error
     }
-
-    await clearWholeCart(userId);
-
-    return order;
 }
+
+
 
 async function getOrders(userId){
 
@@ -71,9 +76,26 @@ async function getOrderById(orderId){
     return order;
 }
 
-async function modifyOrder(orderId, currentStatus){
+async function modifyOrder(orderId, updatedAddress, status){
 
-    const order = await updateOrderById(orderId, {status: currentStatus});
+    let updateThis;
+
+    console.log(updatedAddress);
+    console.log(status);
+    
+    if(updatedAddress){
+        updateThis = {
+            address: updatedAddress
+        };
+    } else {
+        updateThis = {
+            status: status
+        };
+    }
+
+    console.log(updateThis);
+
+    const order = await updateOrderById(orderId, updateThis);
 
     if(!order){
         throw new NotFoundError("Orders not found");

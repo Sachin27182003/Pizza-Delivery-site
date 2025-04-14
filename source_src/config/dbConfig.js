@@ -11,7 +11,7 @@ async function connectDB(){
     } catch (error) {
         console.log("Unable to connect to Mongo DB");
         console.log(error.message);
-        // throw new InternalServerError();
+        throw new InternalServerError();
     }
 }
 

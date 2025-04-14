@@ -31,9 +31,9 @@ getProductRouter.get('/:_id', getProduct);
 getProductsRouter.post('/', getProducts);
 deleteProductRouter.delete('/delete/:_id', deleteProduct);
 orderRouter.post('/', isLoggedIn, newOrder);
-orderRouter.get('/', isLoggedIn, isUser, myOrders);
+orderRouter.get('/', isLoggedIn, myOrders);
 orderRouter.get('/:id', isLoggedIn, myOrderById);
-orderRouter.patch('/update/:id', isLoggedIn, isAdmin , updateOrder);
+orderRouter.patch('/update/:id', isLoggedIn , updateOrder);
 
 
 module.exports = {

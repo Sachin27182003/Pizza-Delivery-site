@@ -19,7 +19,8 @@ const app = express();
 // app.use(cors());
 
 app.use(cors({
-    origin: "https://deliverpizzasite.netlify.app", // NO trailing slash
+    origin: "https://deliverpizzasite.netlify.app/", // NO trailing slash
+    // origin: "http://localhost:5173", // NO trailing slash
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true, // Allow cookies if needed
 }));
@@ -57,7 +58,7 @@ app.get('/ping',(req, res)=>{
 app.listen(serverConfig.PORT || 4000, async () => {
     await connectDB();
     console.log(`server started on port ${serverConfig.PORT}...!`);
-    
+    require('./Scheduler/Scheduler');
 })
 
 // To start directly write "npm start" on terminal

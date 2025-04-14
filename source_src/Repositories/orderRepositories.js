@@ -1,24 +1,27 @@
 const order = require('../Schema/orderSchema');
-const { InternalServerError } = require('../utils/internalServerError');
 
-async function createNewOrder(orderDetails){
- 
+async function createNewOrder(orderDetails) {
     try {
         const Order = await order.create(orderDetails);
         return Order;
     } catch (error) {
-        // if(error.name === 'ValidationError'){
 
-        //     const errorMessageList = Object.keys(error.errors).map((property)=>{
-        //         return error.errors[property].message;
-        //     }) 
-        //     throw new BadRequestError(errorMessageList);
+        // Handle Mongoose validation errors
+        if (error.name === "ValidationError") {
+            const invalidParams = Object.values(error.errors).map(err => err.message);
+            const message = invalidParams.join('\n'); // <-- only the error messages            
+            const validationError = new Error(message);
+            validationError.statusCode = 400;
+            throw validationError;
+        }
 
-        // }
-        console.log(error);
-        throw new InternalServerError();
+        // For all other errors
+        const serverError = new Error("Something went wrong while creating the order.");
+        serverError.statusCode = 500;
+        throw serverError;
     }
 }
+
 
 async function fetchOrders(userId){
 
@@ -40,10 +43,10 @@ async function fetchOrderById(orderId){
     }
 }
 
-async function updateOrderById(orderId, status){
+async function updateOrderById(orderId, updateThis){
 
     try {
-        const data = await order.findByIdAndUpdate(orderId, status, {new: true});
+        const data = await order.findByIdAndUpdate(orderId, updateThis, {new: true}).populate('items.product');
         return data;
     } catch (error) {
         console.log(error.message);
